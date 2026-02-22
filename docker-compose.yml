@@ -1,0 +1,39 @@
+services:
+  trementum-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trementum-api
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:3000"
+    depends_on:
+      - trementum-postgres
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run start:dev
+
+  trementum-postgres:
+    image: postgres:16
+    container_name: trementum-postgres
+    env_file:
+      - .env
+    ports:
+      - "${DB_PORT}:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - trementum-postgres_data:/var/lib/postgresql/data
+
+volumes:
+  trementum-postgres_data:
