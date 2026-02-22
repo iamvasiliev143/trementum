@@ -14,3 +14,13 @@ In the root of your project, create a `.env` file based on the example:
 
 ```bash
 cp .env.example .env
+```
+
+---
+
+## 3️⃣ Start the Project
+Run the project with Docker Compose:
+
+```bash
+docker compose up
+```
